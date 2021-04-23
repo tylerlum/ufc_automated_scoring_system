@@ -2,6 +2,60 @@
 
 The purpose of this repository is to develop an automated scoring system for UFC fights. When an MMA fight ends without a finish, judges render a decision based on a scoring system that can be quite subjective and prone to error. There have been dozens of high-profile fights with controversial decisions that have upset the MMA community. The goal of this system is to learn an accurate scoring strategy, and then use this to get unbiased fight decisions.
 
+## Performance on Concrete Examples
+
+To make our ML model's results concrete, we show what the models predict on some clear examples. We put these examples in the test set, so that we can train and validate our models on the remaining data, and then analyze the predictions on these examples independently.
+
+### Dominant Wins
+
+Examples of dominant wins include Max Holloway vs. Calvin Kattar, Robert Whittaker vs. Kelvin Gastelum, Junior dos Santos vs. Cain Velasquez, and Jon Jones vs. Rashad Evans.
+
+```
+Max Holloway score: 20.294231414794922
+Calvin Kattar score: 5.815070629119873
+Probability that Calvin Kattar won: 5.14968121478887e-07
+Actual winner: Max Holloway
+
+Robert Whittaker score: 8.68769359588623
+Kelvin Gastelum score: 2.1715078353881836
+Probability that Kelvin Gastelum won: 0.0014771156711503863
+Actual winner: Robert Whittaker
+
+Junior Dos Santos score: 2.1854841709136963
+Cain Velasquez score: 9.674657821655273
+Probability that Cain Velasquez won: 0.9994412064552307
+Actual winner: Cain Velasquez
+
+Jon Jones score: 3.728135585784912
+Rashad Evans score: 0.0
+Probability that Rashad Evans won: 0.02347336709499359
+Actual winner: Jon Jones
+```
+
+Examples of controversial decisions include Daniel Cormier vs. Alexander Gustafsson, Jon Jones vs. Dominick Reyes, Conor McGregor vs. Nate Diaz, and Georges St-Pierre vs. Johny Hendricks.
+
+```
+Daniel Cormier score: 7.0259504318237305
+Alexander Gustafsson score: 4.977728843688965
+Probability that Alexander Gustafsson won: 0.11423220485448837
+Actual winner: Daniel Cormier
+
+Jon Jones score: 3.0689547061920166
+Dominick Reyes score: 3.1970248222351074
+Probability that Dominick Reyes won: 0.5319738388061523
+Actual winner: Jon Jones
+
+Nate Diaz score: 8.818340301513672
+Conor McGregor score: 6.82950496673584
+Probability that Conor McGregor won: 0.12038014084100723
+Actual winner: Conor McGregor
+
+Georges St-Pierre score: 3.760822057723999
+Johny Hendricks score: 4.435075759887695
+Probability that Johny Hendricks won: 0.6624550223350525
+Actual winner: Georges St-Pierre
+```
+
 ## Supervised learning results
 
 To solve this problem, we test out over 12 different types of ML models to get a sense of the approaches that work best. Note that there has been minimal hyperparameter tuning so far. Many of these models use the default hyperparameters.  
@@ -82,4 +136,5 @@ Next, the dataset is broken up into train/validate/test splits. Lastly, the X da
 * Perform detailed hyperparameter tuning analysis (keep independent test set to evaluate afterwards to avoid optimization bias)
 * Data augmentation with SMOTE or gaussian noise to increase dataset size
 * Integrate boxing datasets for more fights
+* Analyze if the remaining error is from aleatoric uncertainty (label noise) or epistemic uncertainty (model insufficient)
 
