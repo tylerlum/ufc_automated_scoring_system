@@ -21,7 +21,7 @@ The benefit of these simpler ML models is that we can more easily visualize how 
 
 ### Deep Learning Scoring Comparison Model
 
-Another approach we could take to the problem is to score each individual fighter's fight state (number of knockdowns, significant strikes, takedowns landed in this specific fght), and then compare the scores between the two fighters. The fighter who wins the decision should always have a higher score. Let fighters be labeled A and B. We want a scoring function f(A, B) that returns the winner of the fight. If score(A) > score(B), then A won the fight. To frame this as an ML model, we use a deep learning model that splits the features into fighter 0 and fighter 1 states, scores each fighter, finds the difference in their scores, and then returns the sigmoid of that difference. This ensures consistency, so if f(A, B) = 0, then f(B, A) = 1. A diagram of this model is shown below.
+Another approach we could take to the problem is to score each individual fighter's fight state (number of knockdowns, significant strikes, takedowns landed in this specific fight), and then compare the scores between the two fighters. The fighter who wins the decision should always have a higher score. Let fighters be labeled A and B. We want a scoring function f(A, B) that returns the winner of the fight. If score(A) > score(B), then A won the fight. To frame this as an ML model, we use a deep learning model that splits the features into fighter 0 and fighter 1 states, scores each fighter, finds the difference in their scores, and then returns the sigmoid of that difference. This ensures consistency, so if f(A, B) = 0, then f(B, A) = 1. A diagram of this model is shown below.
 
 ![Deep_Model_Diagram](https://user-images.githubusercontent.com/26510814/115918762-c543c000-a42c-11eb-9136-66c7cccdf5e3.png)
 
@@ -36,11 +36,11 @@ Below, we show the results of this deep learning approach with minimal hyperpara
 
 ## Unsupervised Learning Visualizations
 
-To better understand the data, we use PCA to find a basis that captures the dataset in a way that be visualized. Below we visualize two-component PCA dimensionality reduction, with the colors signifying which fighter won the fight. We see that the data starts to look separable using component 1. The variance explained by these components is 0.22014401 and 0.1460742, meaning a total variance explained of 0.36621821. 
+To better understand the data, we use PCA to find a basis that captures the dataset in a way that can be visualized. Below we visualize two-component PCA dimensionality reduction, with the colors signifying which fighter won the fight. We see that the data starts to look separable using component 1. The variance explained by these components is 0.22014401 and 0.1460742, meaning a total variance explained of 0.36621821. 
 
 ![PCA](https://user-images.githubusercontent.com/26510814/115918540-7d249d80-a42c-11eb-99a1-7163e95fae96.png)
 
-Visualizing the components, it appears that component 0 captures the most common fight stats that vary through fights, but does not clearly separate fighter 0 and 1 performances. However, component 1 appears to be the axis that most clearly seperates the performances for fighter 0 and 1, with fighter 0 winning when component 1 is positive and fighter 1 winning when component 1 is negative. This primarily focuses on ground strikes, control time, and total strikes.
+Visualizing the components, it appears that component 0 captures the most common fight stats that vary through fights, but does not clearly separate fighter 0 and 1 performances. However, component 1 appears to be the axis that most clearly separates the performances for fighter 0 and 1, with fighter 0 winning when component 1 is positive and fighter 1 winning when component 1 is negative. This primarily focuses on ground strikes, control time, and total strikes.
 
 ![PCA_Component0](https://user-images.githubusercontent.com/26510814/115918548-7e55ca80-a42c-11eb-9fd9-cc451349a58f.png)
 
