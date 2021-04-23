@@ -70,5 +70,16 @@ Next, the dataset is broken up into train/validate/test splits. Lastly, the X da
 * UFC_automated_scoring.ipynb - Python notebook for training ML models on the UFC stats
 * data - folder of saved files scraped from the UFC stats website
 
+## Next Steps
 
+* Expand the dataset to use round-by-round information and fighter-specific stats (record, age, reach, etc.)
+* Visualize the spread of data (histograms of knockdowns, strikes landed, takedowns, etc.)
+* Use the judge's score cards for more specific labels than winner and loser
+* Predict method of fight ending (decision, KO, submission, etc.)
+* Create smarter features for better performance (significant strike difference, etc.)
+* Test the classifiers on high-profile, controversial decisions (ensure that these were not used in training or validation)
+* Expand this project to allow for fight prediction (given two fighters, predict who will win based on their records and stats)
+* Perform detailed hyperparameter tuning analysis (keep independent test set to evaluate afterwards to avoid optimization bias)
+* Data augmentation with SMOTE or gaussian noise to increase dataset size
+* Integrate boxing datasets for more fights
 
