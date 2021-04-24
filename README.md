@@ -2,13 +2,44 @@
 
 The purpose of this repository is to develop an automated scoring system for UFC fights. When an MMA fight ends without a finish, judges render a decision based on a scoring system that can be quite subjective and prone to error. There have been dozens of high-profile fights with controversial decisions that have upset the MMA community. The goal of this system is to learn an accurate scoring strategy, and then use this to get unbiased fight decisions.
 
+## Supervised learning results
+
+To solve this problem, we test out over 12 different types of ML models to get a sense of the approaches that work best. Note that there has been minimal hyperparameter tuning so far. Many of these models use the default hyperparameters.  
+
+### Linear SVM 
+
+From this initial work, we find that the linear SVM had some of the best performance across these ML models. We achieve a 86% validation accuracy with the default hyperparameters. The confusion matrices and classification reports are shown below.
+
+![Confusion_matrix](https://user-images.githubusercontent.com/26510814/115918527-785fe980-a42c-11eb-9a20-2f0672a034e7.png)
+
+![Classification_Report](https://user-images.githubusercontent.com/26510814/115918533-7a29ad00-a42c-11eb-8948-3ee57b3a5e22.png)
+
+The benefit of these simpler ML models is that we can more easily visualize how they work. Below, we visualize the feature importances that the SVM found, which shows that it found head strikes, significant strikes, control time, and knockdowns to be the most important features.
+
+![Feature_Importances](https://user-images.githubusercontent.com/26510814/115918513-7564f900-a42c-11eb-9223-3c8eb548b63b.png)
+
+
+### Deep Learning Scoring Comparison Model
+
+Another approach we could take to the problem is to score each individual fighter's fight state (number of knockdowns, significant strikes, takedowns landed in this specific fight), and then compare the scores between the two fighters. The fighter who wins the decision should always have a higher score. Let fighters be labeled A and B. We want a scoring function f(A, B) that returns the winner of the fight. If score(A) > score(B), then A won the fight. To frame this as an ML model, we use a deep learning model that splits the features into fighter 0 and fighter 1 states, scores each fighter, finds the difference in their scores, and then returns the sigmoid of that difference. This ensures consistency, so if f(A, B) = 0, then f(B, A) = 1. A diagram of this model is shown below.
+
+![Deep_Model_Diagram](https://user-images.githubusercontent.com/26510814/115918762-c543c000-a42c-11eb-9136-66c7cccdf5e3.png)
+
+Below, we show the results of this deep learning approach with minimal hyperparameter tuning. This gets reasonable performance with minimal overfitting, and likely can be improved with hyperparameter tuning.
+
+![training](https://user-images.githubusercontent.com/26510814/115920683-6469b700-a42f-11eb-8c92-0a1d9b804b2c.png)
+
+![Confusion_matrix2](https://user-images.githubusercontent.com/26510814/115920690-66337a80-a42f-11eb-83a7-a02d015c1f24.png)
+
+![Classification_Report2](https://user-images.githubusercontent.com/26510814/115920694-67fd3e00-a42f-11eb-912c-db7a155fc9e6.png)
+
 ## Performance on Concrete Examples
 
-To make our ML model's results concrete, we show what the models predict on some clear examples. We put these examples in the test set, so that we can train and validate our models on the remaining data, and then analyze the predictions on these examples independently. Note that for this section, we use the linear SVM and deep learning scoring comparison model, both of which are described below. These results may change as these models are improved.
+To make our ML model's results concrete, we show what the models predict on some clear examples. We put these examples in the test set, so that we can train and validate our models on the remaining data, and then analyze the predictions on these examples independently. Note that for this section, we use the linear SVM and deep learning scoring comparison model, both of which are described above. These results may change as these models are improved.
 
 ### Dominant Wins
 
-Examples of the models' predictions on dominant wins are shown below. 
+Examples of the models' predictions on dominant wins are shown below. It appears that the ML models can very easily decide on the winner in these types of fights.
 
 ```
 DEEP LEARNING SCORING COMPARISON MODEL
@@ -49,7 +80,7 @@ Actual winner: Stipe Miocic
 
 ### Controversial Decisions
 
-Examples of the models' predictions on controversial decisions are shown below. 
+Examples of the models' predictions on controversial decisions are shown below. It appears that there is a good reason for the controversy. Many of these fights have probabilities very close to 50%. Some fight results are disputed between ML models. Some fights have both ML models disagree very strongly with the official decision.
 
 ```
 DEEP LEARNING SCORING COMPARISON MODEL
@@ -104,6 +135,11 @@ TJ Dillashaw score: 3.586935520172119
 Dominick Cruz score: 4.576473236083984
 Probability that Dominick Cruz won: 0.7289966344833374
 Actual winner: Dominick Cruz
+
+Robert Whittaker score: 3.806281089782715
+Yoel Romero score: 6.818504810333252
+Probability that Yoel Romero won: 0.9531233310699463
+Actual winner: Robert Whittaker
 ```
 
 ```
@@ -145,39 +181,11 @@ Actual winner: Jon Jones
 Probability that Jon Jones won: 0.38136042675377635
 Probability that Dominick Reyes won: 0.6186395732462238
 Actual winner: Jon Jones
+
+Probability that Georges St-Pierre won: 0.6021028889613499
+Probability that Johny Hendricks won: 0.3978971110386503
+Actual winner: Georges St-Pierre
 ```
-
-## Supervised learning results
-
-To solve this problem, we test out over 12 different types of ML models to get a sense of the approaches that work best. Note that there has been minimal hyperparameter tuning so far. Many of these models use the default hyperparameters.  
-
-### Linear SVM 
-
-From this initial work, we find that the linear SVM had some of the best performance across these ML models. We achieve a 86% validation accuracy with the default hyperparameters. The confusion matrices and classification reports are shown below.
-
-![Confusion_matrix](https://user-images.githubusercontent.com/26510814/115918527-785fe980-a42c-11eb-9a20-2f0672a034e7.png)
-
-![Classification_Report](https://user-images.githubusercontent.com/26510814/115918533-7a29ad00-a42c-11eb-8948-3ee57b3a5e22.png)
-
-The benefit of these simpler ML models is that we can more easily visualize how they work. Below, we visualize the feature importances that the SVM found, which shows that it found head strikes, significant strikes, control time, and knockdowns to be the most important features.
-
-![Feature_Importances](https://user-images.githubusercontent.com/26510814/115918513-7564f900-a42c-11eb-9223-3c8eb548b63b.png)
-
-
-### Deep Learning Scoring Comparison Model
-
-Another approach we could take to the problem is to score each individual fighter's fight state (number of knockdowns, significant strikes, takedowns landed in this specific fight), and then compare the scores between the two fighters. The fighter who wins the decision should always have a higher score. Let fighters be labeled A and B. We want a scoring function f(A, B) that returns the winner of the fight. If score(A) > score(B), then A won the fight. To frame this as an ML model, we use a deep learning model that splits the features into fighter 0 and fighter 1 states, scores each fighter, finds the difference in their scores, and then returns the sigmoid of that difference. This ensures consistency, so if f(A, B) = 0, then f(B, A) = 1. A diagram of this model is shown below.
-
-![Deep_Model_Diagram](https://user-images.githubusercontent.com/26510814/115918762-c543c000-a42c-11eb-9136-66c7cccdf5e3.png)
-
-Below, we show the results of this deep learning approach with minimal hyperparameter tuning. This gets reasonable performance with minimal overfitting, and likely can be improved with hyperparameter tuning.
-
-![training](https://user-images.githubusercontent.com/26510814/115920683-6469b700-a42f-11eb-8c92-0a1d9b804b2c.png)
-
-![Confusion_matrix2](https://user-images.githubusercontent.com/26510814/115920690-66337a80-a42f-11eb-83a7-a02d015c1f24.png)
-
-![Classification_Report2](https://user-images.githubusercontent.com/26510814/115920694-67fd3e00-a42f-11eb-912c-db7a155fc9e6.png)
-
 
 ## Unsupervised Learning Visualizations
 
