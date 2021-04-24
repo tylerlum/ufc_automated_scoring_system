@@ -99,6 +99,11 @@ Jorge Masvidal score: 3.234452962875366
 Al Iaquinta score: 1.0157654285430908
 Probability that Al Iaquinta won: 0.09808485209941864
 Actual winner: Al Iaquinta
+
+TJ Dillashaw score: 3.586935520172119
+Dominick Cruz score: 4.576473236083984
+Probability that Dominick Cruz won: 0.7289966344833374
+Actual winner: Dominick Cruz
 ```
 
 ```
