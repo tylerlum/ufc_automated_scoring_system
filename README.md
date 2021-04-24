@@ -1,6 +1,6 @@
 # ufc_automated_scoring_system
 
-The purpose of this repository is to develop an automated scoring system for UFC fights. When an MMA fight ends without a finish, judges render a decision based on a scoring system that can be quite subjective and prone to error. There have been dozens of high-profile fights with controversial decisions that have upset the MMA community. The goal of this system is to learn an accurate scoring strategy, and then use this to get unbiased fight decisions.
+The purpose of this repository is to develop an ML-based automated scoring system for UFC fights. When an MMA fight ends without a finish, judges render a decision based on a scoring system that can be quite subjective and prone to error. There have been dozens of high-profile fights with controversial decisions that have upset the MMA community. The goal of this system is to learn an accurate scoring strategy, and then use this to get unbiased fight decisions.
 
 ## Supervised learning results
 
