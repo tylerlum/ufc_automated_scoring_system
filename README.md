@@ -4,11 +4,11 @@ The purpose of this repository is to develop an automated scoring system for UFC
 
 ## Performance on Concrete Examples
 
-To make our ML model's results concrete, we show what the models predict on some clear examples. We put these examples in the test set, so that we can train and validate our models on the remaining data, and then analyze the predictions on these examples independently.
+To make our ML model's results concrete, we show what the models predict on some clear examples. We put these examples in the test set, so that we can train and validate our models on the remaining data, and then analyze the predictions on these examples independently. Note that for this section, we use our deep learning scoring comparison model, described below. These results may change as these models are improved.
 
 ### Dominant Wins
 
-Examples of dominant wins include Max Holloway vs. Calvin Kattar, Robert Whittaker vs. Kelvin Gastelum, Junior dos Santos vs. Cain Velasquez, and Jon Jones vs. Rashad Evans.
+Examples of dominant wins include Max Holloway vs. Calvin Kattar, Robert Whittaker vs. Kelvin Gastelum, and Junior dos Santos vs. Cain Velasquez. 
 
 ```
 Max Holloway score: 20.294231414794922
@@ -25,14 +25,11 @@ Junior Dos Santos score: 2.1854841709136963
 Cain Velasquez score: 9.674657821655273
 Probability that Cain Velasquez won: 0.9994412064552307
 Actual winner: Cain Velasquez
-
-Jon Jones score: 3.728135585784912
-Rashad Evans score: 0.0
-Probability that Rashad Evans won: 0.02347336709499359
-Actual winner: Jon Jones
 ```
 
-Examples of controversial decisions include Daniel Cormier vs. Alexander Gustafsson, Jon Jones vs. Dominick Reyes, Conor McGregor vs. Nate Diaz, and Georges St-Pierre vs. Johny Hendricks.
+### Controversial Decisions
+
+Examples of controversial decisions include Daniel Cormier vs. Alexander Gustafsson, Jon Jones vs. Dominick Reyes, Conor McGregor vs. Nate Diaz, Georges St-Pierre vs. Johny Hendricks, Lyoto Machida vs. Mauricio Rua, BJ Penn vs. Frankie Edgar, and more.
 
 ```
 Daniel Cormier score: 7.0259504318237305
@@ -54,6 +51,36 @@ Georges St-Pierre score: 3.760822057723999
 Johny Hendricks score: 4.435075759887695
 Probability that Johny Hendricks won: 0.6624550223350525
 Actual winner: Georges St-Pierre
+
+Lyoto Machida score: 0.0
+Mauricio Rua score: 2.7728028297424316
+Probability that Mauricio Rua won: 0.9411882758140564
+Actual winner: Lyoto Machida
+
+BJ Penn score: 2.3796894550323486
+Frankie Edgar score: 2.0094170570373535
+Probability that Frankie Edgar won: 0.40847522020339966
+Actual winner: Frankie Edgar
+
+Frankie Edgar score: 3.8824844360351562
+Gray Maynard score: 4.930335998535156
+Probability that Gray Maynard won: 0.7403621077537537
+Actual winner: Neither (draw)
+
+Robbie Lawler score: 3.922581672668457
+Carlos Condit score: 5.678443431854248
+Probability that Carlos Condit won: 0.852690577507019
+Actual winner: Robbie Lawler
+
+Johny Hendricks score: 6.012207984924316
+Robbie Lawler score: 5.5115556716918945
+Probability that Robbie Lawler won: 0.3773874044418335
+Actual winner: Robbie Lawler
+
+Jon Jones score: 3.47890043258667
+Alexander Gustafsson score: 3.9255313873291016
+Probability that Alexander Gustafsson won: 0.6098378896713257
+Actual winner: Jon Jones
 ```
 
 ## Supervised learning results
