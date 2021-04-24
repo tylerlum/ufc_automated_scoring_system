@@ -136,6 +136,10 @@ Actual winner: Robbie Lawler
 Probability that Jon Jones won: 0.7724660750486165
 Probability that Thiago Santos won: 0.22753392495138336
 Actual winner: Jon Jones
+
+Probability that Jon Jones won: 0.38136042675377635
+Probability that Dominick Reyes won: 0.6186395732462238
+Actual winner: Jon Jones
 ```
 
 ## Supervised learning results
