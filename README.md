@@ -4,13 +4,16 @@ The purpose of this repository is to develop an automated scoring system for UFC
 
 ## Performance on Concrete Examples
 
-To make our ML model's results concrete, we show what the models predict on some clear examples. We put these examples in the test set, so that we can train and validate our models on the remaining data, and then analyze the predictions on these examples independently. Note that for this section, we use our deep learning scoring comparison model, described below. These results may change as these models are improved.
+To make our ML model's results concrete, we show what the models predict on some clear examples. We put these examples in the test set, so that we can train and validate our models on the remaining data, and then analyze the predictions on these examples independently. Note that for this section, we use the linear SVM and deep learning scoring comparison model, both of which are described below. These results may change as these models are improved.
 
 ### Dominant Wins
 
-Examples of dominant wins include Max Holloway vs. Calvin Kattar, Robert Whittaker vs. Kelvin Gastelum, and Junior dos Santos vs. Cain Velasquez. 
+Examples of the models' predictions on dominant wins are shown below. 
 
 ```
+DEEP LEARNING SCORING COMPARISON MODEL
+--------------------------------------
+
 Max Holloway score: 20.294231414794922
 Calvin Kattar score: 5.815070629119873
 Probability that Calvin Kattar won: 5.14968121478887e-07
@@ -27,11 +30,31 @@ Probability that Cain Velasquez won: 0.9994412064552307
 Actual winner: Cain Velasquez
 ```
 
+```
+LINEAR SVM
+----------
+
+Probability that Chris Weidman won: 0.90265371531
+Probability that Lyoto Machida won: 0.09734628468926089
+Actual winner: Chris Weidman
+
+Probability that Khabib Nurmagomedov won: 0.9998635429365861
+Probability that Edson Barboza won: 0.00013645706341397387
+Actual winner: Khabib Nurmagomedov
+
+Probability that Stipe Miocic won: 0.9997898068132026
+Probability that Francis Ngannou won: 0.00021019318679730802
+Actual winner: Stipe Miocic
+```
+
 ### Controversial Decisions
 
-Examples of controversial decisions include Daniel Cormier vs. Alexander Gustafsson, Jon Jones vs. Dominick Reyes, Conor McGregor vs. Nate Diaz, Georges St-Pierre vs. Johny Hendricks, Lyoto Machida vs. Mauricio Rua, BJ Penn vs. Frankie Edgar, and more.
+Examples of the models' predictions on controversial decisions are shown below. 
 
 ```
+DEEP LEARNING SCORING COMPARISON MODEL
+--------------------------------------
+
 Daniel Cormier score: 7.0259504318237305
 Alexander Gustafsson score: 4.977728843688965
 Probability that Alexander Gustafsson won: 0.11423220485448837
@@ -42,20 +65,10 @@ Dominick Reyes score: 3.1970248222351074
 Probability that Dominick Reyes won: 0.5319738388061523
 Actual winner: Jon Jones
 
-Nate Diaz score: 8.818340301513672
-Conor McGregor score: 6.82950496673584
-Probability that Conor McGregor won: 0.12038014084100723
-Actual winner: Conor McGregor
-
 Georges St-Pierre score: 3.760822057723999
 Johny Hendricks score: 4.435075759887695
 Probability that Johny Hendricks won: 0.6624550223350525
 Actual winner: Georges St-Pierre
-
-Lyoto Machida score: 0.0
-Mauricio Rua score: 2.7728028297424316
-Probability that Mauricio Rua won: 0.9411882758140564
-Actual winner: Lyoto Machida
 
 BJ Penn score: 2.3796894550323486
 Frankie Edgar score: 2.0094170570373535
@@ -77,9 +90,51 @@ Robbie Lawler score: 5.5115556716918945
 Probability that Robbie Lawler won: 0.3773874044418335
 Actual winner: Robbie Lawler
 
-Jon Jones score: 3.47890043258667
-Alexander Gustafsson score: 3.9255313873291016
-Probability that Alexander Gustafsson won: 0.6098378896713257
+Nick Diaz score: 4.084963321685791
+Carlos Condit score: 4.920336723327637
+Probability that Carlos Condit won: 0.6974899172782898
+Actual winner: Carlos Condit
+
+Jorge Masvidal score: 3.234452962875366
+Al Iaquinta score: 1.0157654285430908
+Probability that Al Iaquinta won: 0.09808485209941864
+Actual winner: Al Iaquinta
+```
+
+```
+LINEAR SVM
+----------
+
+Probability that Nate Diaz won: 0.4772847822360584
+Probability that Conor McGregor won: 0.5227152177639416
+Actual winner: Conor McGregor
+
+Probability that Lyoto Machida won: 0.056800660047238355
+Probability that Mauricio Rua won: 0.9431993399527617
+Actual winner: Lyoto Machida
+
+Probability that Jon Jones won: 0.7256400906741602
+Probability that Alexander Gustafsson won: 0.27435990932584
+Actual winner: Jon Jones
+
+Probability that Israel Adesanya won: 0.560406980160794
+Probability that Yoel Romero won: 0.43959301983920573
+Actual winner: Israel Adesanya
+
+Probability that Robert Whittaker won: 0.09474273102741235
+Probability that Yoel Romero won: 0.9052572689725878
+Actual winner: Robert Whittaker
+
+Probability that Yoel Romero won: 0.7547962319559594
+Probability that Paulo Costa won: 0.2452037680440408
+Actual winner: Paulo Costa
+
+Probability that Robbie Lawler won: 0.008716137936167094
+Probability that Carlos Condit won: 0.9912838620638329
+Actual winner: Robbie Lawler
+
+Probability that Jon Jones won: 0.7724660750486165
+Probability that Thiago Santos won: 0.22753392495138336
 Actual winner: Jon Jones
 ```
 
