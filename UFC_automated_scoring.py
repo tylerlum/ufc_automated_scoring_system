@@ -1,7 +1,6 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: ipynb,py:light
 #     text_representation:
 #       extension: .py
 #       format_name: light
@@ -12,9 +11,6 @@
 #     language: python
 #     name: python3
 # ---
-
-# + [markdown] colab_type="text" id="view-in-github"
-# <a href="https://colab.research.google.com/github/tylerlum/ufc_automated_scoring_system/blob/main/UFC_automated_scoring.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 # + [markdown] id="q2Ink0cSOSRR"
 # # UFC Automated Scoring
@@ -33,26 +29,56 @@ import numpy as np
 import pandas as pd
 
 # + id="3MgHHwyvOSRX"
-STORED_FIGHT_TABLE = pd.read_csv('FIGHT_TABLE_NUM_EVENTS_All_DATA_MODE_Summary_22-04-2021_11:08:22.csv')
+STORED_FIGHT_TABLE = pd.read_csv('data/April_22_2021_better_data/FIGHT_TABLE_NUM_EVENTS_All_DATA_MODE_Summary_22-04-2021_11:08:22.csv')
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 657} id="PlBKZMo0OSRX" outputId="c3d7efa1-5a1e-48a3-8ef8-e860e43c023e"
+# + colab={"base_uri": "https://localhost:8080/", "height": 658} id="PlBKZMo0OSRX" outputId="17b7ba8c-4ed0-467e-bf21-78b4c32eb9b4"
 STORED_FIGHT_TABLE
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 640} id="uF1ya3BLOSRY" outputId="437ecbfd-a5d6-42ad-e64b-c60d930d8c23"
+# + colab={"base_uri": "https://localhost:8080/", "height": 1000} id="7OEfyS34oNMf" outputId="c676e3d6-6af3-4a64-b407-b46603e13981"
+STORED_FIGHT_TABLE[(STORED_FIGHT_TABLE["Fighter 0 Total str."] == 0) & (STORED_FIGHT_TABLE["Winner"] == 0)]
+
+# + colab={"base_uri": "https://localhost:8080/", "height": 430} id="5VXivOhCoXa9" outputId="89350981-b76b-4b89-e714-545fb5f3b97b"
+STORED_FIGHT_TABLE[(STORED_FIGHT_TABLE["Fighter 1 Total str."] == 0) & (STORED_FIGHT_TABLE["Winner"] == 1)]
+
+# + colab={"base_uri": "https://localhost:8080/", "height": 642} id="uF1ya3BLOSRY" outputId="24a5d200-62aa-4f69-a0d4-a4e2f257ec3b"
 # Clean dataset: Only decisions with clear winners
 STORED_FIGHT_TABLE = STORED_FIGHT_TABLE[STORED_FIGHT_TABLE["Method"].str.contains("DEC")]
 STORED_FIGHT_TABLE = STORED_FIGHT_TABLE[(STORED_FIGHT_TABLE["Winner"] == 1) | (STORED_FIGHT_TABLE["Winner"] == 0)]
 STORED_FIGHT_TABLE
 
+# + id="fHjSOBfobBva"
+fighter0 = "Robert Whittaker"
+fighter1 = "Yoel Romero"
+
+# + id="h2OTM47lT6tq"
+controversial = STORED_FIGHT_TABLE[(STORED_FIGHT_TABLE["Fighter 0 Name"] == fighter0) & (STORED_FIGHT_TABLE["Fighter 1 Name"] == fighter1)]
+without_controversial = STORED_FIGHT_TABLE.drop(index=controversial.index)
+
+# + colab={"base_uri": "https://localhost:8080/", "height": 147} id="v7UpZyY9UZ70" outputId="54e2c4c9-dd2a-4f0d-b904-0a3b0abe4c6e"
+controversial
+
+# + colab={"base_uri": "https://localhost:8080/", "height": 101} id="KrwHq6IaUluO" outputId="aa6a27c6-1097-48f9-caa5-e82ae9e39d48"
+without_controversial[(without_controversial["Fighter 0 Name"] == fighter0) & (without_controversial["Fighter 1 Name"] == fighter1)]
+
 # + id="SivCNBMTOSRZ"
-X = STORED_FIGHT_TABLE.drop(['Winner', 'Fighter 0 Name', 'Fighter 1 Name', 'Method'], axis=1).fillna(0)
-y = STORED_FIGHT_TABLE[['Winner']]
+X_train = without_controversial.drop(['Winner', 'Fighter 0 Name', 'Fighter 1 Name', 'Method'], axis=1).fillna(0)
+y_train = without_controversial[['Winner']]
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 455} id="ePWHHGDiOSRZ" outputId="c211382d-fdd4-498c-eaef-449702015273"
-X
+# + id="YRx9XQSrU8k_"
+X_valid = controversial.drop(['Winner', 'Fighter 0 Name', 'Fighter 1 Name', 'Method'], axis=1).fillna(0)
+y_valid = controversial[['Winner']]
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 402} id="-13NNIUoOSRZ" outputId="83aeddc0-e9ef-447e-aed2-703493cf7b6c"
-y
+# + colab={"base_uri": "https://localhost:8080/", "height": 250} id="hPjeCwkvVAMU" outputId="08fc00a8-561d-42b7-8fef-62963920a10d"
+X_train.head()
+
+# + colab={"base_uri": "https://localhost:8080/", "height": 196} id="jDjTAPh3VDV7" outputId="e34c9b24-2252-48b1-b1e0-c5971d730122"
+y_train.head()
+
+# + colab={"base_uri": "https://localhost:8080/", "height": 130} id="ZXIKtExwVE1K" outputId="addba89c-50a4-47b0-9f7a-4fded538d590"
+X_valid.head()
+
+# + colab={"base_uri": "https://localhost:8080/", "height": 77} id="CcWxQryeVGST" outputId="b91601b8-aada-45d5-92ca-314fa69fec92"
+y_valid.head()
 
 
 # + [markdown] id="Jd2Ifk5uOSRa"
@@ -93,35 +119,28 @@ def add_rows_of_flipped_columns(table):
 
 
 # + id="0iGtsWJVOSRa"
-# Train/validate/test split
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=0)
-X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.33, random_state=0)
-
 # Add flipped rows so fighter 0 and 1 are treated same
 X_train, y_train = add_rows_of_flipped_columns(X_train), add_rows_of_flipped_columns(y_train)
 X_valid, y_valid = add_rows_of_flipped_columns(X_valid), add_rows_of_flipped_columns(y_valid)
-X_test, y_test = add_rows_of_flipped_columns(X_test), add_rows_of_flipped_columns(y_test)
 
 # + id="oRU788hJOSRb"
 # Expect equal number of examples in Fighter 0 as Fighter 1 from data augmentation
 assert(len(y_train[y_train['Winner'] == 0]) == len(y_train[y_train['Winner'] == 1]))
 assert(len(y_valid[y_valid['Winner'] == 0]) == len(y_valid[y_valid['Winner'] == 1]))
-assert(len(y_test[y_test['Winner'] == 0]) == len(y_test[y_test['Winner'] == 1]))
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 455} id="g208MGkGOSRb" outputId="8d7f37ae-722e-4285-f255-de544ae009fd"
+
+# + colab={"base_uri": "https://localhost:8080/", "height": 458} id="g208MGkGOSRb" outputId="a492ee92-1b82-4519-8111-89bd8d19a20e"
 X_train
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 402} id="wojL_I-7OSRb" outputId="ab800758-1a0d-40fc-dde0-5ed1820d6b39"
+# + colab={"base_uri": "https://localhost:8080/", "height": 404} id="wojL_I-7OSRb" outputId="f39e3d02-53c5-4b38-f9e4-7b55cfa1c18f"
 y_train
 
-# + colab={"base_uri": "https://localhost:8080/"} id="DndW0X9aOSRc" outputId="2ee4f6d8-e3a0-4dfa-8b49-c81b511307ab"
+# + colab={"base_uri": "https://localhost:8080/"} id="DndW0X9aOSRc" outputId="16221a60-6f8b-4828-aa8d-1541ba38cc21"
 print(f"X_train.shape = {X_train.shape}")
 print(f"X_valid.shape = {X_valid.shape}")
-print(f"X_test.shape = {X_test.shape}")
 print(f"y_train.shape = {y_train.shape}")
 print(f"y_valid.shape = {y_valid.shape}")
-print(f"y_test.shape = {y_test.shape}")
+
 
 # + [markdown] id="xNEsuXzFOSRf"
 # ### Standardize features and break into fighter 0 and 1
@@ -134,29 +153,13 @@ X0_train = X_train[fighter0_columns]
 X1_train = X_train[fighter1_columns]
 X0_valid = X_valid[fighter0_columns]
 X1_valid = X_valid[fighter1_columns]
-X0_test = X_test[fighter0_columns]
-X1_test = X_test[fighter1_columns]
 
 X_train_new = pd.concat([X0_train, X1_train], axis=1)
 X_valid_new = pd.concat([X0_valid, X1_valid], axis=1) 
-X_test_new = pd.concat([X0_test, X1_test], axis=1)
 
 means, stds = X_train_new.mean(), X_train_new.std()
 X_train_new_normal = (X_train_new - means) / stds
 X_valid_new_normal = (X_valid_new - means) / stds
-X_test_new_normal = (X_test_new - means) / stds
-
-# + colab={"base_uri": "https://localhost:8080/"} id="x3836SoTgnx8" outputId="3f2daefc-9add-4897-98c3-79640a9f101d"
-# Add data augmentation only on training data (can try SMOTE, gaussian noise, etc)
-extra_train_copies = 10
-mu, sigma = 0, 0.1
-noisy_copies = [X_train_new_normal + np.random.normal(mu, sigma, X_train_new_normal.shape) for _ in range(extra_train_copies)]
-print(f"X_train_new_normal.shape = {X_train_new_normal.shape}")
-print(f"y_train.shape = {y_train.shape}")
-X_train_new_normal_aug = pd.concat([X_train_new_normal] + noisy_copies, axis=0)
-y_train_aug = pd.concat([y_train] + [y_train] * extra_train_copies, axis=0)
-print(f"X_train_new_normal_aug.shape = {X_train_new_normal_aug.shape}")
-print(f"y_train_aug.shape = {y_train_aug.shape}")
 
 # + [markdown] id="f-sFWdcdiDD1"
 # ## Define inputs to future training
@@ -171,159 +174,9 @@ X_valid = X_valid_new_normal
 #
 # TODO: Play around with PyTorch, add in data augmentation like SMOTE, see if normalizing, standardizing, extracting difference features helps. Must be done for deep models. Try out PCA or MDS to visualize.
 
-# + [markdown] id="asxsbETjkIrk"
-# ### PCA
-
-# + colab={"base_uri": "https://localhost:8080/", "height": 326} id="fESHfkdUkIWm" outputId="a25fb340-9203-4b34-9fa8-1ef8e5930b68"
-from sklearn.decomposition import PCA
-
-# Fit PCA
-pca = PCA(n_components=2)
-Z_train = pca.fit_transform(X_train)
-print(f"pca.explained_variance_ratio_ = {pca.explained_variance_ratio_}")
-
-# Plot
-color_dict = {0: 'red', 1: 'blue'}
-for label in np.unique(y_train):
-    ix = np.where(y_train == label)
-    plt.scatter(Z_train[ix, 0], Z_train[ix, 1], c = color_dict[label], label = label, s = 100)
-plt.legend()
-plt.title("PCA")
-plt.xlabel("Component 0")
-plt.ylabel("Component 1")
-
-# + colab={"base_uri": "https://localhost:8080/", "height": 296} id="Jw6qNhormm4a" outputId="83df8419-9d0a-4b6f-e39b-8cbe890c7b1f"
-# Understand basis
-component0 = pca.components_[0, :]
+# + id="1ZgNyaLvVV3G"
 import matplotlib.pyplot as plt
-plt.rcParams.update({'font.size': 8})
-plt.barh(X_train.columns, component0)
-plt.title("Component 0")
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 296} id="4CXfHZnzmoZw" outputId="4a5da31d-ca4a-4152-dc3e-d93eade2f87d"
-# Understand basis
-component1 = pca.components_[1, :]
-import matplotlib.pyplot as plt
-plt.rcParams.update({'font.size': 8})
-plt.barh(X_train.columns, component1)
-plt.title("Component 1")
-
-# + [markdown] id="nwHwpx3JnZEX"
-# ### Sparse PCA
-
-# + colab={"base_uri": "https://localhost:8080/", "height": 309} id="2chZbqHxndt_" outputId="65569fd2-f698-41cf-dba2-c59ffc3cb6fe"
-from sklearn.decomposition import SparsePCA
-
-# Fit SparsePCA
-sparse_pca = SparsePCA(n_components=2)
-Z_train = sparse_pca.fit_transform(X_train)
-
-# Plot
-color_dict = {0: 'red', 1: 'blue'}
-for label in np.unique(y_train):
-    ix = np.where(y_train == label)
-    plt.scatter(Z_train[ix, 0], Z_train[ix, 1], c = color_dict[label], label = label, s = 100)
-plt.legend()
-plt.title("Sparse PCA")
-plt.xlabel("Component 0")
-plt.ylabel("Component 1")
-
-# + colab={"base_uri": "https://localhost:8080/", "height": 296} id="EVAhzpjqn3YJ" outputId="67c2bc8f-e0c1-485d-f2f2-12e2f45ff287"
-# Understand basis
-component0 = sparse_pca.components_[0, :]
-import matplotlib.pyplot as plt
-plt.rcParams.update({'font.size': 8})
-plt.barh(X_train.columns, component0)
-plt.title("Component 0")
-
-# + colab={"base_uri": "https://localhost:8080/", "height": 296} id="4NKPlOXGn-38" outputId="3cb8d4d9-4a7d-4cd3-d37e-789b28a547d2"
-# Understand basis
-component1 = sparse_pca.components_[1, :]
-import matplotlib.pyplot as plt
-plt.rcParams.update({'font.size': 8})
-plt.barh(X_train.columns, component1)
-plt.title("Component 1")
-
-# + [markdown] id="9363WETbnYAz"
-# ### NMF
-
-# + colab={"base_uri": "https://localhost:8080/", "height": 309} id="JuNbh2L8oIuG" outputId="6b992e52-79d4-486a-dcea-05fa71eb6df8"
-from sklearn.decomposition import NMF
-
-# Fit NMF
-nmf = NMF(n_components=2, init='random', random_state=0)
-if (X_train < 0).values.any():  # Must be non-negative
-    Z_train = nmf.fit_transform(X_train - X_train.min())
-else:
-    Z_train = nmf.fit_transform(X_train)
-
-# Plot
-color_dict = {0: 'red', 1: 'blue'}
-for label in np.unique(y_train):
-    ix = np.where(y_train == label)
-    plt.scatter(Z_train[ix, 0], Z_train[ix, 1], c = color_dict[label], label = label, s = 100)
-plt.legend()
-plt.title("NMF")
-plt.xlabel("Component 0")
-plt.ylabel("Component 1")
-
-# + colab={"base_uri": "https://localhost:8080/", "height": 296} id="uUAETqfcoM-9" outputId="a5c1143f-6a08-474a-9367-7848574b0818"
-# Understand basis
-component0 = nmf.components_[0, :]
-import matplotlib.pyplot as plt
-plt.rcParams.update({'font.size': 8})
-plt.barh(X_train.columns, component0)
-plt.title("Component 0")
-
-# + colab={"base_uri": "https://localhost:8080/", "height": 296} id="KQPRyVvxnH8W" outputId="41517782-48cf-4885-8da4-d5a1d8ab0bbf"
-# Understand basis
-component1 = nmf.components_[1, :]
-import matplotlib.pyplot as plt
-plt.rcParams.update({'font.size': 8})
-plt.barh(X_train.columns, component1)
-plt.title("Component 1")
-
-# + [markdown] id="EBi_AVwWnG7B"
-# ### MDS
-
-# + colab={"base_uri": "https://localhost:8080/", "height": 309} id="dR3d8dHhovBU" outputId="d8d14d51-9c27-4592-d353-b44b6263a622"
-from sklearn.manifold import MDS
-
-# Fit MDS
-mds = MDS(n_components=2, random_state=0)
-Z_train = mds.fit_transform(X_train)
-
-# Plot
-color_dict = {0: 'red', 1: 'blue'}
-for label in np.unique(y_train):
-    ix = np.where(y_train == label)
-    plt.scatter(Z_train[ix, 0], Z_train[ix, 1], c = color_dict[label], label = label, s = 100)
-plt.legend()
-plt.title("MDS")
-plt.xlabel("Component 0")
-plt.ylabel("Component 1")
-
-# + [markdown] id="Xja9LLuWpIEm"
-# ### TSNE
-
-# + colab={"base_uri": "https://localhost:8080/", "height": 309} id="YozL-pVPpKC1" outputId="be10520c-9857-482d-beae-add568472669"
-from sklearn.manifold import TSNE
-
-tsne = TSNE(n_components=2, random_state=0)
-Z_train = tsne.fit_transform(X_train)
-
-# Plot
-color_dict = {0: 'red', 1: 'blue'}
-for label in np.unique(y_train):
-    ix = np.where(y_train == label)
-    plt.scatter(Z_train[ix, 0], Z_train[ix, 1], c = color_dict[label], label = label, s = 100)
-plt.legend()
-plt.title("TSNE")
-plt.xlabel("Component 0")
-plt.ylabel("Component 1")
-
-# + [markdown] id="unt_aWe1nEtd"
-# ### Helper functions for evaluation
 
 # + id="RwGbAJvaOSRc"
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
@@ -347,7 +200,7 @@ def print_classification_report(classifier, X, y):
 # + [markdown] id="d3v7metxjRlr"
 # ### Decision Tree
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 317} id="X0TNR6wajTSX" outputId="2f1a0b08-8ebc-4686-e0a0-a04c61aeb8db"
+# + colab={"base_uri": "https://localhost:8080/", "height": 316} id="X0TNR6wajTSX" outputId="783686ff-cb31-43e1-d819-a03abf682f0f"
 from sklearn.tree import DecisionTreeClassifier
 # Train
 decision_tree_clf = DecisionTreeClassifier(random_state=0)
@@ -364,14 +217,14 @@ import matplotlib.pyplot as plt
 plt.rcParams.update({'font.size': 8})
 plt.barh(X_train.columns, decision_tree_clf.feature_importances_)
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 435} id="0NLVskN4jVqU" outputId="62547603-d819-4026-e998-651088399237"
+# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="0NLVskN4jVqU" outputId="8131e0ea-68ef-495b-b2cb-9795719b2a21"
 plot_confusion_matrix(decision_tree_clf, X_valid, y_valid)
 print_classification_report(decision_tree_clf, X_valid, y_valid)
 
 # + [markdown] id="5jUUa7-6OSRd"
 # ### Random forest
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 372} id="B8ly4Z3TOSRd" outputId="e8e76404-a03c-4f0d-da26-6ff6621e70b3"
+# + colab={"base_uri": "https://localhost:8080/", "height": 371} id="B8ly4Z3TOSRd" outputId="2cb833e2-e5b3-4af0-b5bd-2f134f7e59fb"
 from sklearn.ensemble import RandomForestClassifier
 
 # Train
@@ -389,14 +242,14 @@ import matplotlib.pyplot as plt
 plt.rcParams.update({'font.size': 8})
 plt.barh(X_train.columns, random_forest_clf.feature_importances_)
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="Zo9BGeJoOSRd" outputId="3982c4c8-ecde-40ce-df77-e4e1a39dff96"
+# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="Zo9BGeJoOSRd" outputId="c0160eb9-5a70-41e7-b4a7-f45ac53c3caa"
 plot_confusion_matrix(random_forest_clf, X_valid, y_valid)
 print_classification_report(random_forest_clf, X_valid, y_valid)
 
 # + [markdown] id="0613aZAmbHdw"
 # ### Extra trees
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 372} id="RTCgZ7rIbHEb" outputId="7214851f-8bb9-4c94-ab40-09bf72089dd8"
+# + colab={"base_uri": "https://localhost:8080/", "height": 371} id="RTCgZ7rIbHEb" outputId="84787b99-cdae-4225-ea1c-f540e531a5d8"
 from sklearn.ensemble import ExtraTreesClassifier
 
 # Train
@@ -414,14 +267,14 @@ import matplotlib.pyplot as plt
 plt.rcParams.update({'font.size': 8})
 plt.barh(X_train.columns, extra_trees_clf.feature_importances_)
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="CRY3quOebU7n" outputId="13743cd6-9021-470e-fdb5-0390930775fc"
+# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="CRY3quOebU7n" outputId="3209705b-fe3b-4064-81b9-bd80e968722e"
 plot_confusion_matrix(extra_trees_clf, X_valid, y_valid)
 print_classification_report(extra_trees_clf, X_valid, y_valid)
 
 # + [markdown] id="CXx4w0bQOSRe"
 # ### MLP
 
-# + colab={"base_uri": "https://localhost:8080/"} id="cF3J4g8HOSRe" outputId="8790d309-c811-467d-d7af-2ac13510001b"
+# + colab={"base_uri": "https://localhost:8080/"} id="cF3J4g8HOSRe" outputId="84c0fa45-2976-4b92-d827-f72b2b3b0d73"
 # MLP
 from sklearn.neural_network import MLPClassifier
 
@@ -431,49 +284,56 @@ accuracy_valid = mlp_clf.score(X_valid, y_valid)
 print(f"accuracy_train = {accuracy_train}")
 print(f"accuracy_valid = {accuracy_valid}")
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="xsBZgc7wOSRe" outputId="f925a930-fd35-42f4-d35a-ecdbd587c720"
+# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="xsBZgc7wOSRe" outputId="bee1786f-0666-429b-a547-622d5e0009bd"
 plot_confusion_matrix(mlp_clf, X_valid, y_valid)
 print_classification_report(mlp_clf, X_valid, y_valid)
 
 # + [markdown] id="YaDADd0nOSRe"
 # ### SVM
 
-# + colab={"base_uri": "https://localhost:8080/"} id="Lid4_UcGOSRe" outputId="7b0ef01b-01ae-4e6f-e838-64bc7aba7baa"
+# + colab={"base_uri": "https://localhost:8080/"} id="Lid4_UcGOSRe" outputId="24b07b75-fccc-4655-cd32-3a9265b9dd36"
 # SVM
 from sklearn.svm import SVC
 
-svm_clf = SVC(random_state=1).fit(X_train, y_train)
+svm_clf = SVC(random_state=1, probability=True).fit(X_train, y_train)
 accuracy_train = svm_clf.score(X_train, y_train)
 accuracy_valid = svm_clf.score(X_valid, y_valid)
 print(f"accuracy_train = {accuracy_train}")
 print(f"accuracy_valid = {accuracy_valid}")
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 435} id="9PUOxo-MOSRf" outputId="e3a25d07-a08c-4f3f-d045-c51775bddbda"
+# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="9PUOxo-MOSRf" outputId="2bb1b5af-8389-4798-a656-659debe288d0"
 plot_confusion_matrix(svm_clf, X_valid, y_valid)
 print_classification_report(svm_clf, X_valid, y_valid)
 
-# + colab={"base_uri": "https://localhost:8080/"} id="LzZIqs1OWiXt" outputId="95631fec-67ed-4083-9fe5-d1dcf8dc2721"
+# + colab={"base_uri": "https://localhost:8080/"} id="LzZIqs1OWiXt" outputId="f7fb4c00-c60f-479d-8873-b8bdbc4ffbcc"
 # SVM linear kernel
-svm_linear_clf = SVC(kernel='linear', random_state=1).fit(X_train, y_train)
+svm_linear_clf = SVC(kernel='linear', random_state=1, probability=True).fit(X_train, y_train)
 accuracy_train = svm_linear_clf.score(X_train, y_train)
 accuracy_valid = svm_linear_clf.score(X_valid, y_valid)
 print(f"accuracy_train = {accuracy_train}")
 print(f"accuracy_valid = {accuracy_valid}")
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 282} id="ckmE9q0vXnqs" outputId="56b6236d-2561-4244-b14f-e8b789b19ed7"
+# + colab={"base_uri": "https://localhost:8080/", "height": 281} id="ckmE9q0vXnqs" outputId="091139f1-5dd1-40ae-dc86-744ffe2ed493"
 # Visualize importances
 import matplotlib.pyplot as plt
 plt.rcParams.update({'font.size': 8})
 plt.barh(X_train.columns, svm_linear_clf.coef_[0])
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 435} id="4iMx96BTWwAY" outputId="89411ed0-69c5-49d0-f79e-770cfe9b9676"
+# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="4iMx96BTWwAY" outputId="99d66a02-e424-4056-d3fb-f3344041b195"
 plot_confusion_matrix(svm_linear_clf, X_valid, y_valid)
 print_classification_report(svm_linear_clf, X_valid, y_valid)
+
+# + colab={"base_uri": "https://localhost:8080/"} id="7L3PLSKsV-O_" outputId="cc67f5fa-fbd6-4c52-ea87-f0ec3b176ecd"
+probability0 = svm_linear_clf.predict_proba(X_valid)[0][0]
+probability1 = svm_linear_clf.predict_proba(X_valid)[0][1]
+print(f"Probability that {fighter0} won: {probability0}")
+print(f"Probability that {fighter1} won: {probability1}")
+print(f"Actual winner: {fighter0 if y_valid.iloc[0][0] == 0 else fighter1}")
 
 # + [markdown] id="3itzucb_OSRf"
 # ### XGBoost
 
-# + colab={"base_uri": "https://localhost:8080/"} id="H_WSt6GkOSRf" outputId="ca5a2c2a-3dc5-4803-bde4-657f1e07d591"
+# + colab={"base_uri": "https://localhost:8080/"} id="H_WSt6GkOSRf" outputId="73930bd7-324d-47f6-a843-8c89fab7df20"
 from xgboost import XGBClassifier
 xgb_clf = XGBClassifier()
 xgb_clf.fit(X_train, y_train)
@@ -483,14 +343,14 @@ accuracy_valid = xgb_clf.score(X_valid, y_valid)
 print(f"accuracy_train = {accuracy_train}")
 print(f"accuracy_valid = {accuracy_valid}")
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="KVnq88q6O1Fq" outputId="07ca8b46-69c2-4d8a-9e4e-b7e29776c4a2"
+# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="KVnq88q6O1Fq" outputId="65147f71-ca1a-42dc-9879-86356814c123"
 plot_confusion_matrix(xgb_clf, X_valid, y_valid)
 print_classification_report(xgb_clf, X_valid, y_valid)
 
 # + [markdown] id="6wP0UzhhVG4M"
 # ### Logistic regression
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 372} id="LbmiFpfCVGgu" outputId="29bea944-ab40-4ce5-b0bb-bdd25ff216e6"
+# + colab={"base_uri": "https://localhost:8080/", "height": 371} id="LbmiFpfCVGgu" outputId="59be9e96-c7cd-4250-acda-a6446e370375"
 from sklearn.linear_model import LogisticRegression
 logistic_regression_clf = LogisticRegression(random_state=0).fit(X_train, y_train)
 
@@ -504,11 +364,11 @@ import matplotlib.pyplot as plt
 plt.rcParams.update({'font.size': 8})
 plt.barh(X_train.columns, logistic_regression_clf.coef_[0])
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 435} id="bYiaJ4WKVN0v" outputId="e2dc2ba1-5e80-4e36-cd47-fb20c1810201"
+# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="bYiaJ4WKVN0v" outputId="968a52a6-e893-4927-b3c8-53bba650fa57"
 plot_confusion_matrix(logistic_regression_clf, X_valid, y_valid)
 print_classification_report(logistic_regression_clf, X_valid, y_valid)
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 372} id="cDxUH57MV3CA" outputId="7fe6b233-e0d5-4396-eb57-f7b7ed5824e0"
+# + colab={"base_uri": "https://localhost:8080/", "height": 371} id="cDxUH57MV3CA" outputId="69cc51e8-fde1-4e78-cc0c-00db9b3806be"
 logistic_regression_l1_clf = LogisticRegression(penalty='l1', solver='liblinear', random_state=0).fit(X_train, y_train)
 
 accuracy_train = logistic_regression_l1_clf.score(X_train, y_train)
@@ -521,14 +381,14 @@ import matplotlib.pyplot as plt
 plt.rcParams.update({'font.size': 8})
 plt.barh(X_train.columns, logistic_regression_l1_clf.coef_[0])
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 435} id="zWOjdd_QV6We" outputId="4b19e7b6-3d7e-4a07-f79b-ce35338c74d9"
+# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="zWOjdd_QV6We" outputId="ae985e76-c9de-4f22-b456-fe8a8b4fda0f"
 plot_confusion_matrix(logistic_regression_l1_clf, X_valid, y_valid)
 print_classification_report(logistic_regression_l1_clf, X_valid, y_valid)
 
 # + [markdown] id="gzj5WaU_YRsQ"
 # ### KNN classifier
 
-# + colab={"base_uri": "https://localhost:8080/"} id="Y5ujO215YRFX" outputId="377dcfa7-84f4-4163-ec34-cf37f80078b2"
+# + colab={"base_uri": "https://localhost:8080/"} id="Y5ujO215YRFX" outputId="31af59c1-73a4-4bc3-941b-08c0f7e6327d"
 from sklearn.neighbors import KNeighborsClassifier
 knn_clf = KNeighborsClassifier(n_neighbors=10).fit(X_train, y_train)
 
@@ -537,14 +397,14 @@ accuracy_valid = knn_clf.score(X_valid, y_valid)
 print(f"accuracy_train = {accuracy_train}")
 print(f"accuracy_valid = {accuracy_valid}")
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 435} id="aMgQlf5rYfSU" outputId="43a54041-83c0-42ac-d5e8-5bcb9fa1b41b"
+# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="aMgQlf5rYfSU" outputId="fa312b03-59ab-421e-abca-1cdda4a11256"
 plot_confusion_matrix(knn_clf, X_valid, y_valid)
 print_classification_report(knn_clf, X_valid, y_valid)
 
 # + [markdown] id="nbCFcybKZgYI"
 # ### Gradient boosting
 
-# + colab={"base_uri": "https://localhost:8080/"} id="RQcxuC6PZjMw" outputId="ab0371d2-e017-4544-c795-c2852e56f5b9"
+# + colab={"base_uri": "https://localhost:8080/"} id="RQcxuC6PZjMw" outputId="3e63ed9a-9012-4e47-fdea-5277981ef2ac"
 from sklearn.ensemble import GradientBoostingClassifier
 gradient_boosting_clf = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0).fit(X_train, y_train)
 
@@ -553,14 +413,14 @@ accuracy_valid = gradient_boosting_clf.score(X_valid, y_valid)
 print(f"accuracy_train = {accuracy_train}")
 print(f"accuracy_valid = {accuracy_valid}")
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 435} id="uHZNLkgUZo3I" outputId="9255ab4c-b70a-45b1-9cd7-f4abccc1ed9b"
+# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="uHZNLkgUZo3I" outputId="4054aadf-3216-4d21-e6db-7dadcce81237"
 plot_confusion_matrix(gradient_boosting_clf, X_valid, y_valid)
 print_classification_report(gradient_boosting_clf, X_valid, y_valid)
 
 # + [markdown] id="FQK1JgIgYwUN"
 # ### Adaboost
 
-# + colab={"base_uri": "https://localhost:8080/"} id="8zpZrIACYx0H" outputId="6ccc27e5-b065-4bb4-a773-4cd92a69c9f4"
+# + colab={"base_uri": "https://localhost:8080/"} id="8zpZrIACYx0H" outputId="da2db9e2-4afb-4623-ee76-1f4b33acf1cc"
 from sklearn.ensemble import AdaBoostClassifier
 adaboost_clf = AdaBoostClassifier(n_estimators=100, random_state=0).fit(X_train, y_train)
 
@@ -569,43 +429,9 @@ accuracy_valid = adaboost_clf.score(X_valid, y_valid)
 print(f"accuracy_train = {accuracy_train}")
 print(f"accuracy_valid = {accuracy_valid}")
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 435} id="S04qiBcYYzl2" outputId="4f06571d-8c0e-4d04-c575-132b06e5fa86"
+# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="S04qiBcYYzl2" outputId="370b41ed-f131-4724-ad99-4fb9ac88ba29"
 plot_confusion_matrix(adaboost_clf, X_valid, y_valid)
 print_classification_report(adaboost_clf, X_valid, y_valid)
-
-# + [markdown] id="ksOlSZIgOSRg"
-# ### Deep model
-
-# + colab={"base_uri": "https://localhost:8080/"} id="Ao5ESVIgOSRh" outputId="88f0960d-6a1a-4bed-f635-61fb90649ff0"
-# FFN
-import tensorflow as tf
-
-deep_model = tf.keras.models.Sequential()
-deep_model.add(tf.keras.Input(shape=X_train.shape[1:]))
-deep_model.add(tf.keras.layers.Dense(16, activation='relu'))
-deep_model.add(tf.keras.layers.Dense(16, activation='relu'))
-deep_model.add(tf.keras.layers.Dropout(0.5))
-deep_model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
-
-deep_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-deep_model.summary()
-
-# + colab={"base_uri": "https://localhost:8080/"} id="Pe43H-DXOSRh" outputId="7937fe16-131c-4be2-f2e2-2a6440ad6d0f"
-H = deep_model.fit(X_train, y_train, epochs=100, validation_data=(X_valid_new_normal, y_valid))
-
-# + colab={"base_uri": "https://localhost:8080/", "height": 277} id="acYFP63oOSRh" outputId="7fdb3c03-f002-4bc1-d09f-a88a857d2b44"
-from matplotlib import pyplot as plt
-plt.plot(H.history['accuracy'])
-plt.plot(H.history['val_accuracy'])
-plt.plot(H.history['loss'])
-plt.plot(H.history['val_loss'])
-plt.xlabel('epoch')
-plt.legend(['accuracy', 'val_accuracy', 'loss', 'val_loss'], loc='upper left')
-plt.show()
-
-# + colab={"base_uri": "https://localhost:8080/", "height": 435} id="hrDpuSjjOSRi" outputId="85b851f5-46cf-4284-c571-2000f2ae6b3b"
-plot_confusion_matrix(deep_model, X_valid_new_normal, y_valid)
-print_classification_report(deep_model, X_valid_new_normal, y_valid)
 
 # + [markdown] id="0MTgv_KmOSRj"
 # ### Comparison Model
@@ -616,16 +442,17 @@ from tensorflow.keras.models import Model
 def create_comparison_model(input_shape):
     num_features_per_fighter = input_shape[0] // 2
 
-    model_ = tf.keras.models.Sequential()
+    model_ = tf.keras.models.Sequential(name="scoring_deep_model")
     model_.add(tf.keras.Input(shape=num_features_per_fighter))
     model_.add(tf.keras.layers.Dense(32, activation='relu'))
-    model_.add(tf.keras.layers.Dense(32, activation='relu'))
+    model_.add(tf.keras.layers.Dropout(0.5))
+    model_.add(tf.keras.layers.Dense(16, activation='relu'))
     model_.add(tf.keras.layers.Dropout(0.5))
 
     model_.add(tf.keras.layers.Dense(1, activation='relu'))
     
     # Run cnn model on each frame
-    input_tensor = Input(shape=input_shape)
+    input_tensor = Input(shape=input_shape, name="input")
     fighter0_state = Lambda(lambda x: x[:, :num_features_per_fighter], name='fighter0_state')(input_tensor)
     fighter1_state = Lambda(lambda x: x[:, num_features_per_fighter:], name='fighter1_state')(input_tensor)
 
@@ -635,20 +462,23 @@ def create_comparison_model(input_shape):
     fighter1_score = Lambda(lambda x: x, name='fighter1_score')(fighter1_score)
     
     difference_score = Subtract(name='subtracter')([fighter1_score, fighter0_score])
-    prediction = Activation('sigmoid')(difference_score)
+    prediction = Activation('sigmoid', name='sigmoid')(difference_score)
     return Model(inputs=input_tensor, outputs=prediction)
 
 
-# + colab={"base_uri": "https://localhost:8080/"} id="JVyaVIkzOSRj" outputId="0536e687-0170-4994-a83e-0889665f4de8"
+# + colab={"base_uri": "https://localhost:8080/"} id="JVyaVIkzOSRj" outputId="7905b76f-7da8-4105-e5dc-9f25f3be36f7"
 comparison_model = create_comparison_model(X_train.shape[1:])
 optimizer = tf.keras.optimizers.Adam(lr=0.001)
 comparison_model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
 comparison_model.summary()
 
-# + colab={"base_uri": "https://localhost:8080/"} id="Drp0QsEtOSRk" outputId="ef976487-05cf-40de-8a48-4ee8b286aacd"
-H = comparison_model.fit(X_train, y_train, epochs=100, validation_data=(X_valid_new_normal, y_valid))
+# + colab={"base_uri": "https://localhost:8080/", "height": 564} id="teRgJBKjy6wm" outputId="609351ef-0071-455a-8426-40d5d5e1fde7"
+tf.keras.utils.plot_model(comparison_model)
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 277} id="Pc-Uvs2yOSRk" outputId="00082320-4758-48f5-a98a-70f2c312b6e4"
+# + colab={"base_uri": "https://localhost:8080/"} id="Drp0QsEtOSRk" outputId="66309309-62c8-49ab-ed66-3621bd69ce60"
+H = comparison_model.fit(X_train, y_train, epochs=60, validation_data=(X_valid_new_normal, y_valid))
+
+# + colab={"base_uri": "https://localhost:8080/", "height": 277} id="Pc-Uvs2yOSRk" outputId="13a4e7e7-a403-440b-b288-cd3986d1995b"
 from matplotlib import pyplot as plt
 plt.plot(H.history['accuracy'])
 plt.plot(H.history['val_accuracy'])
@@ -658,59 +488,81 @@ plt.xlabel('epoch')
 plt.legend(['accuracy', 'val_accuracy', 'loss', 'val_loss'], loc='upper left')
 plt.show()
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 435} id="AtM9mTwoOSRk" outputId="f45f7c2a-65fb-4cb4-8ec4-6327c4fc1654"
+# + colab={"base_uri": "https://localhost:8080/", "height": 438} id="AtM9mTwoOSRk" outputId="561833db-2fc6-404b-8e84-ed02638dc7e9"
 plot_confusion_matrix(comparison_model, X_valid_new_normal, y_valid)
 print_classification_report(comparison_model, X_valid_new_normal, y_valid)
 
 # + id="tmXQhcXzOSRl"
-lo, hi = 11, 20
+lo, hi = 0, 1
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 367} id="m_W-6PQpOSRl" outputId="77547f5a-9400-4afa-8109-3b64e85c779f"
-X_test_new[lo:hi]
+# + id="B8yB1b1rWAyJ"
+X_test_new_normal = X_valid_new_normal
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 367} id="TjyT8mTpThMP" outputId="069add08-8f86-4af9-83e3-5324efcb93af"
+# + id="oZjY_QbBWL6U"
+y_test = y_valid
+
+# + colab={"base_uri": "https://localhost:8080/", "height": 130} id="TjyT8mTpThMP" outputId="2d83408d-d83c-42f7-cd60-c6e68f5e2cb8"
 X_test_new_normal[lo:hi]
 
-# + colab={"base_uri": "https://localhost:8080/"} id="D24siDVIOSRl" outputId="109e761a-befe-4a5b-c2bd-c486f2b49000"
+# + id="VA9DyuVbcHGg"
+probability = comparison_model.predict(X_test_new_normal[lo:hi])[0]
+
+# + colab={"base_uri": "https://localhost:8080/"} id="D24siDVIOSRl" outputId="01ec1ba1-bfc5-4397-883c-114a23295f40"
 comparison_model.predict(X_test_new_normal[lo:hi])
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 314} id="MK6NhCojOSRl" outputId="dcb6dd57-a702-4d07-8cbd-8b94d7caa46d"
+# + colab={"base_uri": "https://localhost:8080/", "height": 77} id="MK6NhCojOSRl" outputId="43a2a7fb-82b5-486a-aeb9-4ad71ad255e7"
 y_test[lo:hi]
 
-# + colab={"base_uri": "https://localhost:8080/"} id="icRxd_bKOSRm" outputId="36b20726-937f-4bdf-81c3-3cce1dea586f"
+# + colab={"base_uri": "https://localhost:8080/"} id="icRxd_bKOSRm" outputId="78138e52-e55f-498a-9388-5020a6748074"
 subtracter = comparison_model.get_layer('subtracter').output
 subtracter = Model(comparison_model.input, subtracter)
 subtracter.predict(X_test_new_normal[lo:hi])
 
-# + colab={"base_uri": "https://localhost:8080/"} id="pp_GHFfGOSRm" outputId="be6ffcca-2b86-468f-f7d1-73601e54265f"
+# + colab={"base_uri": "https://localhost:8080/"} id="pp_GHFfGOSRm" outputId="8e93e4c8-bfc3-4a94-b258-94b934c5a7b0"
 fighter0_score = comparison_model.get_layer('fighter0_score').output
 fighter0_score = Model(comparison_model.input, fighter0_score)
 fighter0_score.predict(X_test_new_normal[lo:hi])
 
-# + colab={"base_uri": "https://localhost:8080/"} id="sRbpamFhOSRm" outputId="ff946bad-c414-4dbe-9cf2-e195a0bea6af"
+# + colab={"base_uri": "https://localhost:8080/"} id="sRbpamFhOSRm" outputId="f23fd2fc-51e1-4fc9-a00e-daaef1e83ef5"
 fighter1_score = comparison_model.get_layer('fighter1_score').output
 fighter1_score = Model(comparison_model.input, fighter1_score)
 fighter1_score.predict(X_test_new_normal[lo:hi])
 
-# + colab={"base_uri": "https://localhost:8080/"} id="zHa31HYgOSRn" outputId="1ddc49e6-f1af-43f9-9297-89c36c59e646"
+# + colab={"base_uri": "https://localhost:8080/"} id="bOrJ8nxvcddj" outputId="49ab52ee-c798-4ed1-c809-cb5bda001eb8"
+score0 = fighter0_score.predict(X_test_new_normal[lo:hi])[0][0]
+score1 = fighter1_score.predict(X_test_new_normal[lo:hi])[0][0]
+prediction = comparison_model.predict(X_test_new_normal[lo:hi])[0][0]
+print(f"{fighter0} score: {score0}")
+print(f"{fighter1} score: {score1}")
+print(f"Probability that {fighter1} won: {prediction}")
+print(f"Actual winner: {fighter0 if y_test.iloc[0][0] == 0 else fighter1}")
+
+# + colab={"base_uri": "https://localhost:8080/", "height": 147} id="75PEDBGhRpo1" outputId="87c6b49f-5804-4794-d73e-e3e6400882e2"
+controversial
+
+# + colab={"base_uri": "https://localhost:8080/", "height": 160} id="c4g8g3OFRxWe" outputId="c5ca4282-0960-414b-8006-539d0b6a4b16"
+X_test_new_normal
+
+# + colab={"base_uri": "https://localhost:8080/"} id="zHa31HYgOSRn" outputId="ad063b90-f754-489b-eca9-194f525e94c7"
+# 
 columns = list(X_test_new_normal.columns)
 new_columns = columns[len(columns)//2:] + columns[:len(columns)//2]
 switcheroo = X_test_new_normal[new_columns]
 fighter1_score.predict(switcheroo[lo:hi])
 
-# + colab={"base_uri": "https://localhost:8080/"} id="_OvDdtBjOSRn" outputId="6bba6447-04c5-4667-f355-817dc9c77e5e"
+# + colab={"base_uri": "https://localhost:8080/"} id="_OvDdtBjOSRn" outputId="3e3a6e4a-59d5-4820-c106-8b96357e8163"
 fighter0_score.predict(switcheroo[lo:hi])
 
-# + colab={"base_uri": "https://localhost:8080/"} id="975q2avhOSRn" outputId="82cb0d3c-da57-4ccd-8a2a-64873d683fbd"
+# + colab={"base_uri": "https://localhost:8080/"} id="975q2avhOSRn" outputId="6850cdb1-2ab1-4cf0-a3cd-9d8367f961c0"
 subtracter.predict(switcheroo[lo:hi])
 
-# + colab={"base_uri": "https://localhost:8080/"} id="uci1y0klSyUk" outputId="d6742f2a-8fc0-4a72-a3bd-3f27ca6ebe2d"
+# + colab={"base_uri": "https://localhost:8080/"} id="uci1y0klSyUk" outputId="4bbfcfa6-ec1a-47e4-c144-0799cddf0cd8"
 comparison_model.predict(switcheroo[lo:hi])
 
-# + colab={"base_uri": "https://localhost:8080/"} id="_daq4cdDS2Fw" outputId="a4fc7a7a-4e61-4c8c-9468-27e12d03d9b2"
+# + colab={"base_uri": "https://localhost:8080/"} id="_daq4cdDS2Fw" outputId="567b4fa8-0d97-4f27-c17a-2198ae602879"
 deep_model.predict(X_test_new_normal[1:10])
 
-# + colab={"base_uri": "https://localhost:8080/"} id="QjNmdPPhS-TB" outputId="833606fc-ac00-4bb2-916f-9ab978b26828"
+# + colab={"base_uri": "https://localhost:8080/"} id="QjNmdPPhS-TB" outputId="bd49edaf-4411-4c2d-8555-1c2e6301e574"
 deep_model.predict(switcheroo[1:10])
 
 # + id="SI88RDxQS_7I"
